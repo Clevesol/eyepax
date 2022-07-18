@@ -60,60 +60,75 @@ public class ColorGridGenerator {
     
         System.out.println("finding color with most adjucent nodes for below grid");
         this.printColorGrid();
-        //loop through and finds out color with most adjucent nodes vertically and horizontally 
+        
         String mostOccuredColor = null;
         
+        int occurenceCountHorizontal = 0;
+        String mostOccuredColorHorizontal = null;
+        
+        int occurenceCountVertical = 0;
+        String mostOccuredColorVertical = null;
+        Cell lastHCellOfMostOccrd = null;
+        Cell lastVCellOfMostOccrd = null;
+        
+        //loop through and finds out color with most adjucent nodes vertically and horizontally 
         for(int idx = 0; idx < this.colorGrid.size(); idx++){
-          int occurenceCountVertical = 0;
-            String mostOccuredColorVertical = null;
-            Cell lastVCellOfMostOccrd = null;
+            
+            
             Cell startNode = this.colorGrid.get(idx)[0];
             
+            int currentVOccurance = 0;
             while(startNode.getNextCell() != null){
                 if(startNode.getColor().equals(startNode.getNextCell().getColor())){
-                    mostOccuredColorVertical = startNode.getColor().getColorVal();
-                    
-                    occurenceCountVertical++;
-                }else{
-                    occurenceCountVertical = 0;
+                    currentVOccurance++;
                 }
                 startNode = startNode.getNextCell();
                 lastVCellOfMostOccrd = startNode;
             }
             
-            int occurenceCountHorizontal = 0;
-            String mostOccuredColorHorizontal = null;
+            if(currentVOccurance > occurenceCountVertical){
+                occurenceCountVertical = currentVOccurance;
+                mostOccuredColorVertical = startNode.getPreviousCell().getColor().getColorVal();
+            }
             
-            Cell lastHCellOfMostOccrd = null;
+            
             startNode = this.colorGrid.get(idx)[0];
             
+            int currentHOccurance = 0;
             while(startNode.getBottomNode()!= null){
                 if(startNode.getColor().equals(startNode.getBottomNode().getColor())){
-                    mostOccuredColorHorizontal = startNode.getColor().getColorVal();
-                    occurenceCountHorizontal++;
-                }else{
-                    occurenceCountHorizontal = 0;
+                    currentHOccurance++;
                 }
                 startNode = startNode.getBottomNode();
                 lastHCellOfMostOccrd = startNode;
             }
             
+            if(currentHOccurance > occurenceCountHorizontal){
+                occurenceCountHorizontal = currentHOccurance;
+                mostOccuredColorHorizontal = startNode.getTopNode().getColor().getColorVal();
+            }
             
-            if((null !=lastHCellOfMostOccrd && null != lastVCellOfMostOccrd ) ){
+            
+            
+            
+           
+
+        }   
+        
+        if((null !=lastHCellOfMostOccrd && null != lastVCellOfMostOccrd ) ){
+            //make sure if most vertically occured and most horizontally occured croses 
             if((lastHCellOfMostOccrd.getX() == lastVCellOfMostOccrd.getX()) ||  (lastHCellOfMostOccrd.getY() == lastVCellOfMostOccrd.getY())){
                 mostOccuredColor = lastHCellOfMostOccrd.getColor().getColorVal();
+            
+            //else return most occured out of both vertically or horizontally
             }else{
                 
                 mostOccuredColor =  occurenceCountVertical > occurenceCountHorizontal ? lastVCellOfMostOccrd.getColor().getColorVal() : lastHCellOfMostOccrd.getColor().getColorVal();
                 
             }
             }else{
-                mostOccuredColor = startNode.getColor().getColorVal();
+                mostOccuredColor = this.colorGrid.get(0)[0].getColor().getColorVal();
             }
-            
-           
-
-        }       
         System.out.println("color with most adjucent nodes : "+mostOccuredColor);
     }
     
@@ -123,7 +138,7 @@ public class ColorGridGenerator {
         for(int row = 0; row < rows; row++){
             Cell[] generatedRow = new Cell[cols];
             for(int col = 0; col < cols; col++){
-                Cell cell = new Cell(col, row, new CellColor(String.format("#%06x", new Random().nextInt(20/*0xff*/))));
+                Cell cell = new Cell(col, row, new CellColor(String.format("#%06x", new Random().nextInt(5))));
                 //if top node row avaialble
                 if(row > 0){
                 Cell topNode = generatedCells.get(row-1)[col];
