@@ -114,7 +114,7 @@ public class ColorGridGenerator {
            
 
         }       
-        System.out.println(mostOccuredColor);
+        System.out.println("color with most adjucent nodes : "+mostOccuredColor);
     }
     
     private void generateColorGrid(int cols, int rows){
